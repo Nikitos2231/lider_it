@@ -1,7 +1,11 @@
 package test.example.leader_it.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "team")
@@ -20,16 +24,18 @@ public class Team {
     private SportType sportType;
 
     @Column(name = "date_of_create")
-    private LocalDate dateOfCreate;
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date dateOfCreate;
 
     public Team() {
     }
 
-    public LocalDate getDateOfCreate() {
+    public Date getDateOfCreate() {
         return dateOfCreate;
     }
 
-    public void setDateOfCreate(LocalDate dateOfCreate) {
+    public void setDateOfCreate(Date dateOfCreate) {
         this.dateOfCreate = dateOfCreate;
     }
 

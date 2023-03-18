@@ -2,12 +2,13 @@ package test.example.leader_it.repositories;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import test.example.leader_it.dtos.requests.TeamFilterRequest;
 import test.example.leader_it.models.Team;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 @Repository
@@ -22,9 +23,20 @@ public class TeamRepository {
     }
 
     @Transactional(readOnly = true)
-    public List<Team> getAll() {
+    public List<Team> getAll(TeamFilterRequest request) {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("SELECT t FROM Team t", Team.class).getResultList();
+        int pageSize = Integer.parseInt(request.getMaxCount());
+        int currentPage = Integer.parseInt(request.getPage());
+
+        Query<Team> query = session.createNativeQuery("SELECT * FROM team t WHERE cast(t.sport_type as varchar) like :sportType and " +
+                "t.date_of_create between date(:startDate) and date(:endDate)", Team.class)
+                .setParameter("sportType", request.getSportType())
+                .setParameter("startDate", request.getStartDate())
+                .setParameter("endDate", request.getEndDate())
+                .setFirstResult((currentPage - 1) * pageSize)
+                .setMaxResults(pageSize);
+
+        return query.getResultList();
     }
 
 }
