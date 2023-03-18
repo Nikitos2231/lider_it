@@ -2,10 +2,9 @@ package test.example.leader_it.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import test.example.leader_it.converters.DateOfCreateConverter;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "team")
@@ -26,8 +25,7 @@ public class Team {
     private SportType sportType;
 
     @Column(name = "date_of_create")
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateOfCreate;
+    @Convert(converter = DateOfCreateConverter.class)
+    private String dateOfCreate;
 }
 

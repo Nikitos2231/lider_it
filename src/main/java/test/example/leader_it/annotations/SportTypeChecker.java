@@ -1,6 +1,7 @@
 package test.example.leader_it.annotations;
 
-import test.example.leader_it.validators.DateValidator;
+import test.example.leader_it.validators.SportTypeValidator;
+import test.example.leader_it.validators.StringDateValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -14,13 +15,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Target({ElementType.PARAMETER, FIELD })
 @Retention(RUNTIME)
-@Constraint(validatedBy = DateValidator.class)
+@Constraint(validatedBy = SportTypeValidator.class)
 @Documented
-public @interface DatePattern {
+public @interface SportTypeChecker {
 
     String message() default "{invalid value}";
 
     Class<?>[] groups() default { };
 
     Class<? extends Payload>[] payload() default { };
+
 }

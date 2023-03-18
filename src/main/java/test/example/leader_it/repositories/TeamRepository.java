@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import test.example.leader_it.dtos.requests.TeamFilterRequest;
@@ -34,6 +33,11 @@ public class TeamRepository {
                 .setMaxResults(pageSize);
 
         return query.getResultList();
+    }
+
+    public void save(Team team) {
+        Session session = sessionFactory.getCurrentSession();
+        session.save(team);
     }
 
 }
