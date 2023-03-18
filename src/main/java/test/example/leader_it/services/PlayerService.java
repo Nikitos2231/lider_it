@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import test.example.leader_it.dtos.PlayerDTO;
+import test.example.leader_it.dtos.requests.PlayerFilterRequest;
 import test.example.leader_it.models.Player;
 import test.example.leader_it.repositories.PlayerRepository;
 
@@ -19,6 +20,10 @@ public class PlayerService {
 
     public List<PlayerDTO> getAllPlayers() {
         return playerRepository.getAll().stream().map(this::convertToPlayerDTO).collect(Collectors.toList());
+    }
+
+    public List<PlayerDTO> getPlayersByTeam(long id, PlayerFilterRequest request) {
+        return playerRepository.getAllByTeam(id, request).stream().map(this::convertToPlayerDTO).collect(Collectors.toList());
     }
 
     private Player convertToPlayer(PlayerDTO playerDTO) {

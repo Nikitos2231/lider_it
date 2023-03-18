@@ -5,10 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import test.example.leader_it.dtos.PlayerDTO;
 import test.example.leader_it.dtos.TeamDTO;
+import test.example.leader_it.dtos.requests.PlayerFilterRequest;
 import test.example.leader_it.dtos.requests.TeamFilterRequest;
 import test.example.leader_it.exceptions.InvalidDataForTeamException;
+import test.example.leader_it.exceptions.PlayerFilterRequestException;
 import test.example.leader_it.exceptions.TeamFilterRequestException;
+import test.example.leader_it.services.PlayerService;
 import test.example.leader_it.services.TeamService;
 import test.example.leader_it.util.BindingResultFiller;
 
@@ -21,13 +25,14 @@ import java.util.List;
 public class TeamController {
 
     private final TeamService teamService;
+    private final PlayerService playerService;
 
     @GetMapping
-    public List<TeamDTO> getAllTeams(@RequestBody(required = false) @Valid TeamFilterRequest request, BindingResult bindingResult) throws TeamFilterRequestException {
+    public ResponseEntity<List<TeamDTO>> getAllTeams(@RequestBody(required = false) @Valid TeamFilterRequest request, BindingResult bindingResult) throws TeamFilterRequestException {
         if (bindingResult.hasErrors()) {
             throw new TeamFilterRequestException(BindingResultFiller.fillBindingResult(bindingResult));
         }
-        return teamService.getAllTeams(request == null ? new TeamFilterRequest() : request);
+        return ResponseEntity.ok(teamService.getAllTeams(request == null ? new TeamFilterRequest() : request));
     }
 
     @PostMapping
@@ -37,6 +42,18 @@ public class TeamController {
         }
         teamService.saveTeam(teamDTO);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{team_id}")
+    public ResponseEntity<List<PlayerDTO>> getPlayersByTeam(
+            @PathVariable("team_id") long id,
+            @RequestBody(required = false) @Valid PlayerFilterRequest request,
+            BindingResult bindingResult) throws PlayerFilterRequestException {
+
+        if (bindingResult.hasErrors()) {
+            throw new PlayerFilterRequestException(BindingResultFiller.fillBindingResult(bindingResult));
+        }
+        return ResponseEntity.ok(playerService.getPlayersByTeam(id, request == null ? new PlayerFilterRequest() : request));
     }
 
 }
