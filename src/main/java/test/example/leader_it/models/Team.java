@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import test.example.leader_it.converters.DateOfCreateConverter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "team")
@@ -27,5 +28,8 @@ public class Team {
     @Column(name = "date_of_create")
     @Convert(converter = DateOfCreateConverter.class)
     private String dateOfCreate;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)
+    private List<Player> players;
 }
 
