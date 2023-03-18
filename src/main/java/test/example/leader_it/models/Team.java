@@ -1,14 +1,16 @@
 package test.example.leader_it.models;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Table(name = "team")
+@Data
+@NoArgsConstructor
 public class Team {
 
     @Id
@@ -27,40 +29,5 @@ public class Team {
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfCreate;
-
-    public Team() {
-    }
-
-    public Date getDateOfCreate() {
-        return dateOfCreate;
-    }
-
-    public void setDateOfCreate(Date dateOfCreate) {
-        this.dateOfCreate = dateOfCreate;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTeamName() {
-        return teamName;
-    }
-
-    public void setTeamName(String teamName) {
-        this.teamName = teamName;
-    }
-
-    public SportType getSportType() {
-        return sportType;
-    }
-
-    public void setSportType(SportType sportType) {
-        this.sportType = sportType;
-    }
 }
 

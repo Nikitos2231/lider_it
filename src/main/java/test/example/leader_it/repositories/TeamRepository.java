@@ -1,5 +1,6 @@
 package test.example.leader_it.repositories;
 
+import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -13,14 +14,10 @@ import java.util.List;
 
 @Repository
 @Transactional
+@RequiredArgsConstructor
 public class TeamRepository {
 
     private final SessionFactory sessionFactory;
-
-    @Autowired
-    public TeamRepository(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Transactional(readOnly = true)
     public List<Team> getAll(TeamFilterRequest request) {

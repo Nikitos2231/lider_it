@@ -1,5 +1,6 @@
 package test.example.leader_it.services;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,16 +13,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TeamService {
 
     private final TeamRepository teamRepository;
     private final ModelMapper modelMapper;
-
-    @Autowired
-    public TeamService(TeamRepository teamRepository, ModelMapper modelMapper) {
-        this.teamRepository = teamRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public List<TeamDTO> getAllTeams(TeamFilterRequest request) {
         return teamRepository.getAll(request).stream().map(this::convertToTeam).collect(Collectors.toList());
