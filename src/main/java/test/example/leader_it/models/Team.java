@@ -2,7 +2,7 @@ package test.example.leader_it.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import test.example.leader_it.converters.DateOfCreateConverter;
+import test.example.leader_it.converters.DateConverter;
 
 import javax.persistence.*;
 import java.util.List;
@@ -26,7 +26,7 @@ public class Team {
     private SportType sportType;
 
     @Column(name = "date_of_create")
-    @Convert(converter = DateOfCreateConverter.class)
+    @Convert(converter = DateConverter.class)
     private String dateOfCreate;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.REMOVE)

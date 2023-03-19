@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class DateOfCreateConverter implements AttributeConverter<String, Date> {
+public class DateConverter implements AttributeConverter<String, Date> {
 
     @Override
     public Date convertToDatabaseColumn(String s) {

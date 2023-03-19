@@ -37,4 +37,9 @@ public class PlayerRepository {
                 .setMaxResults(pageSize)
                 .getResultList();
     }
+
+    public void savePlayer(Player player) {
+        Session session = sessionFactory.getCurrentSession();
+        session.persist(player);
+    }
 }

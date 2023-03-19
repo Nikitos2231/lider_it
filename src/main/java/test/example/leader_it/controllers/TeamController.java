@@ -9,10 +9,7 @@ import test.example.leader_it.dtos.PlayerDTO;
 import test.example.leader_it.dtos.TeamDTO;
 import test.example.leader_it.dtos.requests.PlayerFilterRequest;
 import test.example.leader_it.dtos.requests.TeamFilterRequest;
-import test.example.leader_it.exceptions.InvalidDataForTeamException;
-import test.example.leader_it.exceptions.PlayerFilterRequestException;
-import test.example.leader_it.exceptions.TeamFilterRequestException;
-import test.example.leader_it.exceptions.TeamNotFoundException;
+import test.example.leader_it.exceptions.*;
 import test.example.leader_it.services.PlayerService;
 import test.example.leader_it.services.TeamService;
 import test.example.leader_it.util.BindingResultFiller;
@@ -60,6 +57,17 @@ public class TeamController {
     @DeleteMapping("/{team_id}")
     public ResponseEntity<Void> deleteTeam(@PathVariable("team_id") long id) throws TeamNotFoundException {
         teamService.deleteTeam(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/{team_id}/players")
+    public ResponseEntity<Void> addPlayer(@PathVariable("team_id") long id,
+                                          @RequestBody @Valid PlayerDTO playerDTO,
+                                          BindingResult bindingResult) throws InvalidDataForPlayerException {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidDataForPlayerException(BindingResultFiller.fillBindingResult(bindingResult));
+        }
+        playerService.savePlayer(playerDTO, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

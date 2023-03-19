@@ -2,6 +2,7 @@ package test.example.leader_it.models;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import test.example.leader_it.converters.DateConverter;
 
 import javax.persistence.*;
 
@@ -26,6 +27,7 @@ public class Player {
     private String patronymic;
 
     @Column(name = "date_of_birth")
+    @Convert(converter = DateConverter.class)
     private String dateOfBirth;
 
     @Column(name = "role_or_position")

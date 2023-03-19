@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import test.example.leader_it.dtos.responses.ErrorResponse;
-import test.example.leader_it.exceptions.InvalidDataForTeamException;
-import test.example.leader_it.exceptions.PlayerFilterRequestException;
-import test.example.leader_it.exceptions.TeamFilterRequestException;
-import test.example.leader_it.exceptions.TeamNotFoundException;
+import test.example.leader_it.exceptions.*;
 
 import java.util.Date;
 
@@ -35,5 +32,8 @@ public class ExceptionHandlerController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), new Date().getTime()));
     }
 
-
+    @ExceptionHandler(InvalidDataForPlayerException.class)
+    public ResponseEntity<ErrorResponse> invalidPlayer(InvalidDataForPlayerException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage(), new Date().getTime()));
+    }
 }
