@@ -2,12 +2,14 @@ package test.example.leader_it.dtos.requests;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import test.example.leader_it.annotations.StringDatePattern;
 
 import javax.validation.constraints.Pattern;
 
 @Data
 @NoArgsConstructor
+@ToString
 public class TeamFilterRequest {
 
     @Pattern(regexp = "^(\\d+)$|^(%)$", message = "sport type should be figure: 0,1,2....")

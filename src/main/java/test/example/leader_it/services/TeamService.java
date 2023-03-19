@@ -1,6 +1,8 @@
 package test.example.leader_it.services;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import test.example.leader_it.dtos.TeamDTO;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TeamService {
 
+    private static final Logger logger = LogManager.getLogger(TeamService.class);
     private final TeamRepository teamRepository;
     private final ModelMapper modelMapper;
 
@@ -56,6 +59,7 @@ public class TeamService {
 
     private void checkTeamExists(Optional<Team> team, long teamId) throws TeamNotFoundException {
         if (!team.isPresent()) {
+            logger.warn("Team with id: {} - doesn't exist", teamId);
             throw new TeamNotFoundException("Team with id: " + teamId + " doesn't exist");
         }
     }

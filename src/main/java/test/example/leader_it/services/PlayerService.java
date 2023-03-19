@@ -1,6 +1,8 @@
 package test.example.leader_it.services;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import test.example.leader_it.dtos.PlayerDTO;
@@ -19,7 +21,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PlayerService {
-
+    
+    private static final Logger logger = LogManager.getLogger(PlayerService.class);
     private final ModelMapper modelMapper;
     private final PlayerRepository playerRepository;
     private final TeamService teamService;
@@ -36,6 +39,7 @@ public class PlayerService {
         Player player = convertToPlayer(playerDTO);
         Optional<Team> team = teamService.getById(id);
         if (!team.isPresent()) {
+            logger.warn("Team with id: {} - wasn't founded", id);
             throw new InvalidDataForEntityException("Team with id: " + id + " doesn't exist!");
         }
         player.setTeam(team.get());
@@ -62,12 +66,13 @@ public class PlayerService {
         playerRepository.updatePlayer(playerToUpdate);
     }
 
-    public void transferPlayerInOtherTeam(long playerId, long teamId, long newTeamId) throws PlayerNotFoundException, TeamNotFoundException {
+    public void transmitPlayerInOtherTeam(long playerId, long teamId, long newTeamId) throws PlayerNotFoundException, TeamNotFoundException {
         Optional<Player> optionalPlayer = playerRepository.getPlayerByTeamAndId(teamId, playerId);
         checkPlayerExists(optionalPlayer, teamId, playerId);
         Optional<Team> optionalTeam = teamService.getById(newTeamId);
         if (!optionalTeam.isPresent()) {
-            throw new TeamNotFoundException("Team with id: " + playerId + " not found in the team with id: " + teamId);
+            logger.warn("Team with id: {} - not found", newTeamId);
+            throw new TeamNotFoundException("Team with id: " + newTeamId + " not found");
         }
         Player player = optionalPlayer.get();
         player.setTeam(optionalTeam.get());
@@ -84,6 +89,7 @@ public class PlayerService {
 
     private void checkPlayerExists(Optional<Player> player, long teamId, long playerId) throws PlayerNotFoundException {
         if (!player.isPresent()) {
+            logger.warn("Player with id: {} not found in the team with id: {}", playerId, teamId);
             throw new PlayerNotFoundException("Player with id: " + playerId + " not found in the team with id: " + teamId);
         }
     }

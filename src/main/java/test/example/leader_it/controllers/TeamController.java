@@ -1,6 +1,8 @@
 package test.example.leader_it.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -23,6 +25,7 @@ import java.util.List;
 @RequestMapping("/teams")
 public class TeamController {
 
+    private static final Logger logger = LogManager.getLogger(TeamController.class);
     private final TeamService teamService;
     private final PlayerService playerService;
     private final RequestValidator requestValidator;
@@ -31,6 +34,7 @@ public class TeamController {
     public ResponseEntity<List<TeamDTO>> getAllTeams(@RequestBody(required = false) @Valid TeamFilterRequest request,
                                                      BindingResult bindingResult) throws BadRequestException {
         requestValidator.validateRequest(bindingResult);
+        logger.info("User perform searching with parameters: {}", request);
         return ResponseEntity.ok(teamService.getAllTeams(request == null ? new TeamFilterRequest() : request));
     }
 
@@ -39,6 +43,7 @@ public class TeamController {
                                          BindingResult bindingResult) throws BadRequestException {
         requestValidator.validateEntityRequest(bindingResult, teamDTO);
         teamService.saveTeam(teamDTO);
+        logger.info("Saved new team with name: {}", teamDTO.getTeamName());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -47,12 +52,14 @@ public class TeamController {
                                                             @RequestBody(required = false) @Valid PlayerFilterRequest request,
                                                             BindingResult bindingResult) throws BadRequestException {
         requestValidator.validateRequest(bindingResult);
+        logger.info("User perform searching players by team with id: {}", id);
         return ResponseEntity.ok(playerService.getPlayersByTeam(id, request == null ? new PlayerFilterRequest() : request));
     }
 
     @DeleteMapping("/{team_id}")
     public ResponseEntity<Void> deleteTeam(@PathVariable("team_id") long id) throws NotFoundException {
         teamService.deleteTeam(id);
+        logger.info("Team with id: {} - was deleted", id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -62,12 +69,14 @@ public class TeamController {
                                           BindingResult bindingResult) throws BadRequestException {
         requestValidator.validateEntityRequest(bindingResult, playerDTO);
         playerService.savePlayer(playerDTO, id);
+        logger.info("Player with surname: {} - was added into the team with id: {}", playerDTO.getSurname(), id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{team_id}/players/{player_id}")
     public ResponseEntity<PlayerDTO> getPlayerInTeam(@PathVariable("team_id") long teamId,
                                                      @PathVariable("player_id") long playerId) {
+        logger.info("User perform searching player with id: {}, into the team with id: {}", playerId, teamId);
         return ResponseEntity.ok(playerService.getPlayerInTeam(teamId, playerId));
     }
 
@@ -75,6 +84,7 @@ public class TeamController {
     public ResponseEntity<Void> deletePlayerInTeam(@PathVariable("team_id") long teamId,
                                                    @PathVariable("player_id") long playerId) throws NotFoundException {
         playerService.deletePlayerInTeam(teamId, playerId);
+        logger.info("Player with id: {}, into the team with id: {} - was deleted", playerId, teamId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -84,6 +94,7 @@ public class TeamController {
                                            BindingResult bindingResult) throws NotFoundException, BadRequestException {
         requestValidator.validateEntityRequest(bindingResult, teamDTO);
         teamService.updateTeam(teamDTO, id);
+        logger.info("Team with id: {} - was updated", id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -94,6 +105,7 @@ public class TeamController {
                                                    BindingResult bindingResult) throws NotFoundException, BadRequestException {
         requestValidator.validateEntityRequest(bindingResult, playerDTO);
         playerService.updatePlayerInTeam(playerDTO, teamId, playerId);
+        logger.info("Player with id: {}, that was member of the team with id: {} - was updated", playerId, teamId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -101,7 +113,9 @@ public class TeamController {
     public ResponseEntity<Void> transferPlayer(@PathVariable("team_id") long teamId,
                                                @PathVariable("player_id") long playerId,
                                                @PathVariable("new_team_id") long newTeamId) throws NotFoundException {
-        playerService.transferPlayerInOtherTeam(playerId, teamId, newTeamId);
+        playerService.transmitPlayerInOtherTeam(playerId, teamId, newTeamId);
+        logger.info("PLayer with id: {}, that was member of the team with id: {} - was transmited into the team with id: {}",
+                playerId, teamId, newTeamId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
