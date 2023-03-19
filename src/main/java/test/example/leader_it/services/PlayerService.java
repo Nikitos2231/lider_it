@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PlayerService {
-    
+
     private static final Logger logger = LogManager.getLogger(PlayerService.class);
     private final ModelMapper modelMapper;
     private final PlayerRepository playerRepository;

@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/create-table-team.yaml
+  - include:
+      file: db/changelog/changeset/create-table-player.yaml
+  - include:
+      file: db/changelog/changeset/insertions/insert-into-team-table.yaml
+  - include:
+      file: db/changelog/changeset/insertions/insert-into-player-table-cska.yaml
+  - include:
+      file: db/changelog/changeset/insertions/insert-into-player-table-enisey.yaml
+  - include:
+      file: db/changelog/changeset/insertions/insert-into-player-table-zenit.yaml

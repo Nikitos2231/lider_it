@@ -16,7 +16,7 @@ public class TeamFilterRequest {
     private String sportType = "%";
 
     @StringDatePattern(message = "invalid date")
-    private String startDate = "1900-03-03";
+    private String startDate = "1200-03-03";
 
     @StringDatePattern(message = "invalid date")
     private String endDate = "3000-03-03";
