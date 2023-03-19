@@ -7,8 +7,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import test.example.leader_it.dtos.requests.PlayerFilterRequest;
 import test.example.leader_it.models.Player;
+import test.example.leader_it.models.Team;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -41,5 +43,19 @@ public class PlayerRepository {
     public void savePlayer(Player player) {
         Session session = sessionFactory.getCurrentSession();
         session.persist(player);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Player> getPlayerByTeamAndId(long teamId, long playerId) {
+        Session session = sessionFactory.getCurrentSession();
+        List<Player> players = session.createQuery("SELECT p FROM Player p where p.team.id = :teamId and p.id = :playerId", Player.class)
+                .setParameter("teamId", teamId)
+                .setParameter("playerId", playerId).getResultList();
+        return players.size() == 1 ? Optional.of(players.get(0)) : Optional.empty();
+    }
+
+    public void deletePlayer(Player player) {
+        Session session = sessionFactory.getCurrentSession();
+        session.remove(player);
     }
 }

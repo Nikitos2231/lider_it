@@ -36,4 +36,9 @@ public class ExceptionHandlerController {
     public ResponseEntity<ErrorResponse> invalidPlayer(InvalidDataForPlayerException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage(), new Date().getTime()));
     }
+
+    @ExceptionHandler(PlayerNotFoundException.class)
+    public ResponseEntity<ErrorResponse> playerNotFound(PlayerNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), new Date().getTime()));
+    }
 }

@@ -71,4 +71,17 @@ public class TeamController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/{team_id}/players/{player_id}")
+    public ResponseEntity<PlayerDTO> getPlayerInTeam(@PathVariable("team_id") long teamId,
+                                                     @PathVariable("player_id") long playerId) {
+        return ResponseEntity.ok(playerService.getPlayerInTeam(teamId, playerId));
+    }
+
+    @DeleteMapping("/{team_id}/players/{player_id}")
+    public ResponseEntity<Void> deletePlayerInTeam(@PathVariable("team_id") long teamId,
+                                                   @PathVariable("player_id") long playerId) throws PlayerNotFoundException {
+        playerService.deletePlayerInTeam(teamId, playerId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

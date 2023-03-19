@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 import test.example.leader_it.dtos.PlayerDTO;
 import test.example.leader_it.dtos.requests.PlayerFilterRequest;
 import test.example.leader_it.exceptions.InvalidDataForPlayerException;
+import test.example.leader_it.exceptions.PlayerNotFoundException;
 import test.example.leader_it.models.Player;
 import test.example.leader_it.models.Team;
 import test.example.leader_it.repositories.PlayerRepository;
 import test.example.leader_it.repositories.TeamRepository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,6 +41,19 @@ public class PlayerService {
         }
         player.setTeam(team.get());
         playerRepository.savePlayer(player);
+    }
+
+    public PlayerDTO getPlayerInTeam(long teamId, long playerId) {
+        Optional<Player> player = playerRepository.getPlayerByTeamAndId(teamId, playerId);
+        return player.map(this::convertToPlayerDTO).orElse(null);
+    }
+
+    public void deletePlayerInTeam(long teamId, long playerId) throws PlayerNotFoundException {
+        Optional<Player> player = playerRepository.getPlayerByTeamAndId(teamId, playerId);
+        if (!player.isPresent()) {
+            throw new PlayerNotFoundException("Player with id: " + playerId + " not found in the team with id: " + teamId);
+        }
+        playerRepository.deletePlayer(player.get());
     }
 
     private Player convertToPlayer(PlayerDTO playerDTO) {
