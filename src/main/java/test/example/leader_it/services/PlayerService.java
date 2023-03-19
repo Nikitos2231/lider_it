@@ -7,6 +7,7 @@ import test.example.leader_it.dtos.PlayerDTO;
 import test.example.leader_it.dtos.requests.PlayerFilterRequest;
 import test.example.leader_it.exceptions.InvalidDataForPlayerException;
 import test.example.leader_it.exceptions.PlayerNotFoundException;
+import test.example.leader_it.exceptions.TeamNotFoundException;
 import test.example.leader_it.models.Player;
 import test.example.leader_it.models.Team;
 import test.example.leader_it.repositories.PlayerRepository;
@@ -65,6 +66,20 @@ public class PlayerService {
         playerToUpdate.setTeam(optionalPlayer.get().getTeam());
         playerToUpdate.setId(playerId);
         playerRepository.updatePlayer(playerToUpdate);
+    }
+
+    public void transferPlayerInOtherTeam(long playerId, long teamId, long newTeamId) throws PlayerNotFoundException, TeamNotFoundException {
+        Optional<Player> optionalPlayer = playerRepository.getPlayerByTeamAndId(teamId, playerId);
+        if (!optionalPlayer.isPresent()) {
+            throw new PlayerNotFoundException("Player with id: " + playerId + " not found in the team with id: " + teamId);
+        }
+        Optional<Team> optionalTeam = teamRepository.getById(newTeamId);
+        if (!optionalTeam.isPresent()) {
+            throw new TeamNotFoundException("Team with id: " + playerId + " not found in the team with id: " + teamId);
+        }
+        Player player = optionalPlayer.get();
+        player.setTeam(optionalTeam.get());
+        playerRepository.updatePlayer(player);
     }
 
     private Player convertToPlayer(PlayerDTO playerDTO) {

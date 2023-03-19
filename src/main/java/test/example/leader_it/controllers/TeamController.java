@@ -107,4 +107,12 @@ public class TeamController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PatchMapping("/{team_id}/players/{player_id}/transferTo/{new_team_id}")
+    public ResponseEntity<Void> transferPlayer(@PathVariable("team_id") long teamId,
+                                               @PathVariable("player_id") long playerId,
+                                               @PathVariable("new_team_id") long newTeamId) throws PlayerNotFoundException, TeamNotFoundException {
+        playerService.transferPlayerInOtherTeam(playerId, teamId, newTeamId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
