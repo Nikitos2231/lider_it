@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import test.example.leader_it.dtos.requests.TeamFilterRequest;
 import test.example.leader_it.models.Team;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -38,6 +40,18 @@ public class TeamRepository {
     public void save(Team team) {
         Session session = sessionFactory.getCurrentSession();
         session.save(team);
+    }
+
+    public void deleteTeam(Team team) {
+        Session session = sessionFactory.getCurrentSession();
+        session.remove(team);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Team> getById(long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Team team = session.get(Team.class, id);
+        return team == null ? Optional.empty() : Optional.of(team);
     }
 
 }

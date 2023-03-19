@@ -6,10 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import test.example.leader_it.dtos.TeamDTO;
 import test.example.leader_it.dtos.requests.TeamFilterRequest;
+import test.example.leader_it.exceptions.TeamNotFoundException;
 import test.example.leader_it.models.Team;
 import test.example.leader_it.repositories.TeamRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +27,14 @@ public class TeamService {
 
     public void saveTeam(TeamDTO teamDTO) {
         teamRepository.save(convertToTeam(teamDTO));
+    }
+
+    public void deleteTeam(long id) throws TeamNotFoundException {
+        Optional<Team> team = teamRepository.getById(id);
+        if (!team.isPresent()) {
+            throw new TeamNotFoundException("Team with id: " + id + " doesn't exist!");
+        }
+        teamRepository.deleteTeam(team.get());
     }
 
     private Team convertToTeam(TeamDTO teamDTO) {

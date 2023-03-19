@@ -12,6 +12,7 @@ import test.example.leader_it.dtos.requests.TeamFilterRequest;
 import test.example.leader_it.exceptions.InvalidDataForTeamException;
 import test.example.leader_it.exceptions.PlayerFilterRequestException;
 import test.example.leader_it.exceptions.TeamFilterRequestException;
+import test.example.leader_it.exceptions.TeamNotFoundException;
 import test.example.leader_it.services.PlayerService;
 import test.example.leader_it.services.TeamService;
 import test.example.leader_it.util.BindingResultFiller;
@@ -44,7 +45,7 @@ public class TeamController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("/{team_id}")
+    @GetMapping("/{team_id}/players")
     public ResponseEntity<List<PlayerDTO>> getPlayersByTeam(
             @PathVariable("team_id") long id,
             @RequestBody(required = false) @Valid PlayerFilterRequest request,
@@ -54,6 +55,12 @@ public class TeamController {
             throw new PlayerFilterRequestException(BindingResultFiller.fillBindingResult(bindingResult));
         }
         return ResponseEntity.ok(playerService.getPlayersByTeam(id, request == null ? new PlayerFilterRequest() : request));
+    }
+
+    @DeleteMapping("/{team_id}")
+    public ResponseEntity<Void> deleteTeam(@PathVariable("team_id") long id) throws TeamNotFoundException {
+        teamService.deleteTeam(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
