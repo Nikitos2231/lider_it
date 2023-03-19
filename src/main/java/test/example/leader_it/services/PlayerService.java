@@ -56,6 +56,17 @@ public class PlayerService {
         playerRepository.deletePlayer(player.get());
     }
 
+    public void updatePlayerInTeam(PlayerDTO playerDTO, long teamId, long playerId) throws PlayerNotFoundException {
+        Optional<Player> optionalPlayer = playerRepository.getPlayerByTeamAndId(teamId, playerId);
+        if (!optionalPlayer.isPresent()) {
+            throw new PlayerNotFoundException("Player with id: " + playerId + " not found in the team with id: " + teamId);
+        }
+        Player playerToUpdate = convertToPlayer(playerDTO);
+        playerToUpdate.setTeam(optionalPlayer.get().getTeam());
+        playerToUpdate.setId(playerId);
+        playerRepository.updatePlayer(playerToUpdate);
+    }
+
     private Player convertToPlayer(PlayerDTO playerDTO) {
         return modelMapper.map(playerDTO, Player.class);
     }

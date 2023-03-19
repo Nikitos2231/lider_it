@@ -95,4 +95,16 @@ public class TeamController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PatchMapping("/{team_id}/players/{player_id}")
+    public ResponseEntity<Void> updatePLayerInTeam(@PathVariable("team_id") long teamId,
+                                                   @PathVariable("player_id") long playerId,
+                                                   @RequestBody @Valid PlayerDTO playerDTO,
+                                                   BindingResult bindingResult) throws InvalidDataForPlayerException, PlayerNotFoundException {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidDataForPlayerException(BindingResultFiller.fillBindingResult(bindingResult));
+        }
+        playerService.updatePlayerInTeam(playerDTO, teamId, playerId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

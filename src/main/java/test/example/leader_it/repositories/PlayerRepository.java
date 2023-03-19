@@ -58,4 +58,9 @@ public class PlayerRepository {
         Session session = sessionFactory.getCurrentSession();
         session.remove(player);
     }
+
+    public void updatePlayer(Player player) {
+        Session session = sessionFactory.getCurrentSession();
+        session.update(player);
+    }
 }
