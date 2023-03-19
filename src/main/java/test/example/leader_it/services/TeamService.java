@@ -37,6 +37,16 @@ public class TeamService {
         teamRepository.deleteTeam(team.get());
     }
 
+    public void updateTeam(TeamDTO teamDTO, long id) throws TeamNotFoundException {
+        Optional<Team> optionalTeam = teamRepository.getById(id);
+        if (!optionalTeam.isPresent()) {
+            throw new TeamNotFoundException("Team with id: " + id + " doesn't exist");
+        }
+        Team team = convertToTeam(teamDTO);
+        team.setId(id);
+        teamRepository.updateTeam(team);
+    }
+
     private Team convertToTeam(TeamDTO teamDTO) {
         return modelMapper.map(teamDTO, Team.class);
     }

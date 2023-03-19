@@ -84,4 +84,15 @@ public class TeamController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PatchMapping("/{team_id}")
+    public ResponseEntity<Void> updateTeam(@PathVariable("team_id") long id,
+                                           @RequestBody @Valid TeamDTO teamDTO,
+                                           BindingResult bindingResult) throws TeamNotFoundException, InvalidDataForTeamException {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidDataForTeamException(BindingResultFiller.fillBindingResult(bindingResult));
+        }
+        teamService.updateTeam(teamDTO, id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

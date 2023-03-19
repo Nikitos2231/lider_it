@@ -54,4 +54,10 @@ public class TeamRepository {
         return team == null ? Optional.empty() : Optional.of(team);
     }
 
+    public void updateTeam(Team team) {
+        System.out.println(team.toString());
+        Session session = sessionFactory.getCurrentSession();
+        session.update(team);
+    }
+
 }
