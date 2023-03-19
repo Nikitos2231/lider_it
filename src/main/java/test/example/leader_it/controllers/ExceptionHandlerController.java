@@ -5,40 +5,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import test.example.leader_it.dtos.responses.ErrorResponse;
-import test.example.leader_it.exceptions.*;
+import test.example.leader_it.exceptions.bad_request_exceptions.BadRequestException;
+import test.example.leader_it.exceptions.not_found_exceptions.NotFoundException;
 
 import java.util.Date;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
 
-    @ExceptionHandler(TeamFilterRequestException.class)
-    public ResponseEntity<ErrorResponse> invalidFilterRequest(TeamFilterRequestException e) {
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> invalidData(BadRequestException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), new Date().getTime()));
     }
 
-    @ExceptionHandler(InvalidDataForTeamException.class)
-    public ResponseEntity<ErrorResponse> invalidDataInTeam(InvalidDataForTeamException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), new Date().getTime()));
-    }
-
-    @ExceptionHandler(PlayerFilterRequestException.class)
-    public ResponseEntity<ErrorResponse> invalidPlayerFilter(PlayerFilterRequestException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage(), new Date().getTime()));
-    }
-
-    @ExceptionHandler(TeamNotFoundException.class)
-    public ResponseEntity<ErrorResponse> teamNotFound(TeamNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), new Date().getTime()));
-    }
-
-    @ExceptionHandler(InvalidDataForPlayerException.class)
-    public ResponseEntity<ErrorResponse> invalidPlayer(InvalidDataForPlayerException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage(), new Date().getTime()));
-    }
-
-    @ExceptionHandler(PlayerNotFoundException.class)
-    public ResponseEntity<ErrorResponse> playerNotFound(PlayerNotFoundException e) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> notFoundData(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage(), new Date().getTime()));
     }
 }

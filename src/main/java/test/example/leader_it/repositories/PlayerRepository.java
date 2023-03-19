@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import test.example.leader_it.dtos.requests.PlayerFilterRequest;
 import test.example.leader_it.models.Player;
-import test.example.leader_it.models.Team;
 
 import java.util.List;
 import java.util.Optional;

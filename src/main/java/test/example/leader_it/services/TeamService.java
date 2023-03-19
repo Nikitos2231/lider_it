@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import test.example.leader_it.dtos.TeamDTO;
 import test.example.leader_it.dtos.requests.TeamFilterRequest;
-import test.example.leader_it.exceptions.TeamNotFoundException;
+import test.example.leader_it.exceptions.not_found_exceptions.TeamNotFoundException;
 import test.example.leader_it.models.Team;
 import test.example.leader_it.repositories.TeamRepository;
 
@@ -29,21 +29,21 @@ public class TeamService {
     }
 
     public void deleteTeam(long id) throws TeamNotFoundException {
-        Optional<Team> team = teamRepository.getById(id);
-        if (!team.isPresent()) {
-            throw new TeamNotFoundException("Team with id: " + id + " doesn't exist!");
-        }
-        teamRepository.deleteTeam(team.get());
+        Optional<Team> optionalTeam = getById(id);
+        checkTeamExists(optionalTeam, id);
+        teamRepository.deleteTeam(optionalTeam.get());
     }
 
     public void updateTeam(TeamDTO teamDTO, long id) throws TeamNotFoundException {
-        Optional<Team> optionalTeam = teamRepository.getById(id);
-        if (!optionalTeam.isPresent()) {
-            throw new TeamNotFoundException("Team with id: " + id + " doesn't exist");
-        }
+        Optional<Team> optionalTeam = getById(id);
+        checkTeamExists(optionalTeam, id);
         Team team = convertToTeam(teamDTO);
         team.setId(id);
         teamRepository.updateTeam(team);
+    }
+
+    public Optional<Team> getById(long id) {
+        return teamRepository.getById(id);
     }
 
     private Team convertToTeam(TeamDTO teamDTO) {
@@ -52,5 +52,11 @@ public class TeamService {
 
     private TeamDTO convertToTeam(Team team) {
         return modelMapper.map(team, TeamDTO.class);
+    }
+
+    private void checkTeamExists(Optional<Team> team, long teamId) throws TeamNotFoundException {
+        if (!team.isPresent()) {
+            throw new TeamNotFoundException("Team with id: " + teamId + " doesn't exist");
+        }
     }
 }

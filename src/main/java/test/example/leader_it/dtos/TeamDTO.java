@@ -20,7 +20,7 @@ public class TeamDTO {
 
     @NotNull(message = "type of sport shouldn't be null")
     @NotEmpty(message = "sport type can't be empty")
-    @SportTypeChecker(message = "invalid type of sport, please choose one of the follow variants: FOOTBALL, BASKETBALL")
+    @SportTypeChecker(message = "invalid type of sport, please choose one of the follow variants: BASKETBALL, FOOTBALL, VOLLEYBALL")
     private String sportType;
 
     @NotNull(message = "date of create can't be null")

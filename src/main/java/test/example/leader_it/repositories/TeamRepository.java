@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import test.example.leader_it.dtos.requests.TeamFilterRequest;
 import test.example.leader_it.models.Team;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

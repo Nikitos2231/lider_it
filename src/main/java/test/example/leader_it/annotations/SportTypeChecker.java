@@ -1,7 +1,6 @@
 package test.example.leader_it.annotations;
 
 import test.example.leader_it.validators.SportTypeValidator;
-import test.example.leader_it.validators.StringDateValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

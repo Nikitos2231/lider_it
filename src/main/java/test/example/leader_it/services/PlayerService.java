@@ -5,15 +5,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import test.example.leader_it.dtos.PlayerDTO;
 import test.example.leader_it.dtos.requests.PlayerFilterRequest;
-import test.example.leader_it.exceptions.InvalidDataForPlayerException;
-import test.example.leader_it.exceptions.PlayerNotFoundException;
-import test.example.leader_it.exceptions.TeamNotFoundException;
+import test.example.leader_it.exceptions.bad_request_exceptions.InvalidDataForEntityException;
+import test.example.leader_it.exceptions.not_found_exceptions.PlayerNotFoundException;
+import test.example.leader_it.exceptions.not_found_exceptions.TeamNotFoundException;
 import test.example.leader_it.models.Player;
 import test.example.leader_it.models.Team;
 import test.example.leader_it.repositories.PlayerRepository;
-import test.example.leader_it.repositories.TeamRepository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +22,7 @@ public class PlayerService {
 
     private final ModelMapper modelMapper;
     private final PlayerRepository playerRepository;
-    private final TeamRepository teamRepository;
+    private final TeamService teamService;
 
     public List<PlayerDTO> getAllPlayers() {
         return playerRepository.getAll().stream().map(this::convertToPlayerDTO).collect(Collectors.toList());
@@ -34,11 +32,11 @@ public class PlayerService {
         return playerRepository.getAllByTeam(id, request).stream().map(this::convertToPlayerDTO).collect(Collectors.toList());
     }
 
-    public void savePlayer(PlayerDTO playerDTO, long id) throws InvalidDataForPlayerException {
+    public void savePlayer(PlayerDTO playerDTO, long id) throws InvalidDataForEntityException {
         Player player = convertToPlayer(playerDTO);
-        Optional<Team> team = teamRepository.getById(id);
+        Optional<Team> team = teamService.getById(id);
         if (!team.isPresent()) {
-            throw new InvalidDataForPlayerException("Team with id: " + id + " doesn't exist!");
+            throw new InvalidDataForEntityException("Team with id: " + id + " doesn't exist!");
         }
         player.setTeam(team.get());
         playerRepository.savePlayer(player);
@@ -50,18 +48,14 @@ public class PlayerService {
     }
 
     public void deletePlayerInTeam(long teamId, long playerId) throws PlayerNotFoundException {
-        Optional<Player> player = playerRepository.getPlayerByTeamAndId(teamId, playerId);
-        if (!player.isPresent()) {
-            throw new PlayerNotFoundException("Player with id: " + playerId + " not found in the team with id: " + teamId);
-        }
-        playerRepository.deletePlayer(player.get());
+        Optional<Player> optionalPlayer = playerRepository.getPlayerByTeamAndId(teamId, playerId);
+        checkPlayerExists(optionalPlayer, teamId, playerId);
+        playerRepository.deletePlayer(optionalPlayer.get());
     }
 
     public void updatePlayerInTeam(PlayerDTO playerDTO, long teamId, long playerId) throws PlayerNotFoundException {
         Optional<Player> optionalPlayer = playerRepository.getPlayerByTeamAndId(teamId, playerId);
-        if (!optionalPlayer.isPresent()) {
-            throw new PlayerNotFoundException("Player with id: " + playerId + " not found in the team with id: " + teamId);
-        }
+        checkPlayerExists(optionalPlayer, teamId, playerId);
         Player playerToUpdate = convertToPlayer(playerDTO);
         playerToUpdate.setTeam(optionalPlayer.get().getTeam());
         playerToUpdate.setId(playerId);
@@ -70,10 +64,8 @@ public class PlayerService {
 
     public void transferPlayerInOtherTeam(long playerId, long teamId, long newTeamId) throws PlayerNotFoundException, TeamNotFoundException {
         Optional<Player> optionalPlayer = playerRepository.getPlayerByTeamAndId(teamId, playerId);
-        if (!optionalPlayer.isPresent()) {
-            throw new PlayerNotFoundException("Player with id: " + playerId + " not found in the team with id: " + teamId);
-        }
-        Optional<Team> optionalTeam = teamRepository.getById(newTeamId);
+        checkPlayerExists(optionalPlayer, teamId, playerId);
+        Optional<Team> optionalTeam = teamService.getById(newTeamId);
         if (!optionalTeam.isPresent()) {
             throw new TeamNotFoundException("Team with id: " + playerId + " not found in the team with id: " + teamId);
         }
@@ -88,5 +80,11 @@ public class PlayerService {
 
     private PlayerDTO convertToPlayerDTO(Player player) {
         return modelMapper.map(player, PlayerDTO.class);
+    }
+
+    private void checkPlayerExists(Optional<Player> player, long teamId, long playerId) throws PlayerNotFoundException {
+        if (!player.isPresent()) {
+            throw new PlayerNotFoundException("Player with id: " + playerId + " not found in the team with id: " + teamId);
+        }
     }
 }

@@ -9,7 +9,6 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class PlayerFilterRequest {
 
-    @Pattern(regexp = "^(\\w+)$|^(%)$", message = "sport type should be figure: 0,1,2....")
     private String roleOrPosition = "%";
 
     @Pattern(regexp = "[1-9]\\d*", message = "page should be grater than 0")

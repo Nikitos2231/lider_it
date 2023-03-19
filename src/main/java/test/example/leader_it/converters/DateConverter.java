@@ -16,7 +16,8 @@ public class DateConverter implements AttributeConverter<String, Date> {
         try {
             date = formatter.parse(s);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            return new Date();
         }
         return date;
     }
