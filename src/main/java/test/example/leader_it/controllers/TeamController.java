@@ -112,7 +112,7 @@ public class TeamController {
     @PatchMapping("/{team_id}/players/{player_id}/transfer-to/{new_team_id}")
     public ResponseEntity<Void> transferPlayer(@PathVariable("team_id") long teamId,
                                                @PathVariable("player_id") long playerId,
-                                               @PathVariable("new_team_id") long newTeamId) throws NotFoundException {
+                                               @PathVariable("new_team_id") long newTeamId  ) throws NotFoundException {
         playerService.transmitPlayerInOtherTeam(playerId, teamId, newTeamId);
         logger.info("PLayer with id: {}, that was member of the team with id: {} - was transmited into the team with id: {}",
                 playerId, teamId, newTeamId);
