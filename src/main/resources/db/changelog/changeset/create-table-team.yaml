@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-team
+      author: Nikita
+      changes:
+        - createTable:
+            tableName: team
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: team_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sport_type
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_of_create
+                  type: date
+                  constraints:
+                    nullable: false

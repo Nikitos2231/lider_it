@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-into-team-table
+      author: Nikita
+      changes:
+        - insert:
+            tableName: team
+            columns:
+              - column:
+                  name: id
+                  value: 101
+              - column:
+                  name: team_name
+                  value: Enisey
+              - column:
+                  name: sport_type
+                  value: 0
+              - column:
+                  name: date_of_create
+                  value: 1946-04-15
+
+        - insert:
+            tableName: team
+            columns:
+              - column:
+                  name: id
+                  value: 102
+              - column:
+                  name: team_name
+                  value: Zenit
+              - column:
+                  name: sport_type
+                  value: 0
+              - column:
+                  name: date_of_create
+                  value: 1995-06-03
+
+        - insert:
+            tableName: team
+            columns:
+              - column:
+                  name: id
+                  value: 103
+              - column:
+                  name: team_name
+                  value: CSKA
+              - column:
+                  name: sport_type
+                  value: 1
+              - column:
+                  name: date_of_create
+                  value: 1899-11-29
